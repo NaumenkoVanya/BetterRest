@@ -43,7 +43,7 @@ struct ContentView: View {
         NavigationStack {
             Form {
                 Text("Your ideal dedtime is...\(alertMessage)")
-                    .font(.title)
+                    .font(.system(size: 20))
                     .bold()
                 Section("When do you wont wake up?") {
                     DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
