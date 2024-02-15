@@ -40,6 +40,9 @@ struct ContentView: View {
 
         NavigationStack {
             Form {
+                Text("Your ideal dedtime is...\(alertMessage)")
+                    .font(.title)
+                    .bold()
                 Section("When do you wont wake up?") {
                     DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
                 }
@@ -79,7 +82,9 @@ struct ContentView: View {
             .toolbar {
                 Button("Caiculate", action: calculateDedtime)
             }
+            
         }
+        
     }
     
     func calculateDedtime() {
@@ -100,8 +105,9 @@ struct ContentView: View {
             alertTitle = "Error"
             alertMessage = "Sorry, there was a problem calculating your bedtime."
         }
-        showingAlert = true
+//        showingAlert = true
     }
+    
 }
 
 #Preview {
