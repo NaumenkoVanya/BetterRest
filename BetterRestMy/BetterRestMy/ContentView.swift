@@ -55,7 +55,6 @@ struct ContentView: View {
                     Text("Daily coffee intake")
                     Stepper(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cup(s)", value: $coffeeAmount, in: 1...20)
                     Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in: 1...20)
-                    Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in: 1...20)
                 }
             }
             .alert(alertTitle, isPresented: $showingAlert) {
