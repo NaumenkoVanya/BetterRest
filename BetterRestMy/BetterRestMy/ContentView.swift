@@ -5,28 +5,32 @@
 //  Created by Ваня Науменко on 13.02.24.
 //
 
+import CoreML
 import SwiftUI
 
 struct ContentView: View {
-    //MARK: Day 25
+    // MARK: Day 25
+
     @State private var wakeUp = Date.now
     @State private var sleepAmount = 8.0
-    @State private var coffeeamount = 1
+    @State private var coffeeAmount = 1
     
-    //MARK: 24 day - 1
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
+    @State private var showingAlert = false
+    
+    // MARK: 24 day - 1
+
 //    @State private var sleepAmount = 8.0
 //    @State private var sleepAmountTwo = 9.0
 //    @State private var wakeUp = Date.now
 //    var someDate = Calendar(identifier: .gregorian)
 //    @State private var components = DateComponents()
-//    
-    func calculateBedtime() {
-        
-    }
+
     var body: some View {
-        //MARK: 25 day
+        // MARK: 25 day
+        
         NavigationStack {
-            Spacer()
             VStack {
                 Text("When do you wont wake up?")
                     .font(.headline)
@@ -35,31 +39,56 @@ struct ContentView: View {
                 Text("Desired amount og sleep")
                     .font(.headline)
                 Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
-            }
-            .padding()
-            
-            Spacer()
-            
-            VStack {
                 Text("Daily coffee intake")
-                Stepper("\(coffeeamount)  cup(s)", value: $coffeeamount, in: 1...20)
-            
+                Stepper("\(coffeeAmount)  cup(s)", value: $coffeeAmount, in: 1...20)
+                
+            }
+            .alert(alertTitle, isPresented: $showingAlert) {
+                Button("OK") {}
+            } message: {
+                Text(alertMessage)
             }
             .padding()
             .navigationTitle("BetterRest")
             .toolbar {
-                Button("Caiculate", action: calculateBedtime)
+                Button("Caiculate", action: calculateDedtime)
             }
             
-            Spacer()
-            Spacer()
-            
         }
+        
+    }
+    
+    func calculateDedtime() {
+        do {
+            let config = MLModelConfiguration()
+            let model = try SleepCalculator(configuration: config)
+            let components = Calendar.current.dateComponents([.hour, .minute], from: wakeUp)
+            
+            let hour = (components.hour ?? 0) * 60 * 60
+            let minute = (components.minute ?? 0) * 60
+            
+            let prediction = try model.prediction(wake: Int64(Double(hour + minute)), estimatedSleep: sleepAmount, coffee: Int64(Double(coffeeAmount)))
+            let sleepTime = wakeUp - prediction.actualSleep
+            alertTitle = "Your ideal dedtime is..."
+            alertMessage = sleepTime.formatted(date: .omitted, time: .shortened)
+            //print("Ivan tuta")
+        } catch {
+            alertTitle = "Error"
+            alertMessage = "Sorry, there was a problem calculating your bedtime."
+        }
+        showingAlert = true
+    }
+}
+
+
+#Preview {
+    ContentView()
+}
 
 //            //MARK: 24 day - 2
 //        VStack {
 //            Text(Date.now.formatted(date: .long, time: .shortened))
-//            
+//
 //            Text(Date.now, format: .dateTime.hour().minute())
 //            Text(Date.now, format: .dateTime.hour().minute().day().month())
 //            DatePicker("Please enter a date", selection: $wakeUp, displayedComponents: .hourAndMinute)
@@ -68,9 +97,3 @@ struct ContentView: View {
 //            DatePicker("Please enter a date", selection: $wakeUp, in: Date.now...)
 //            Stepper("\(sleepAmountTwo.formatted()) hours", value: $sleepAmountTwo, in: 4...12, step: 0.25)
 //        }
-    }
-}
-
-#Preview {
-    ContentView()
-}
