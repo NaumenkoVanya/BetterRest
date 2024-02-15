@@ -10,14 +10,22 @@ import SwiftUI
 
 struct ContentView: View {
     // MARK: Day 25
-
-    @State private var wakeUp = Date.now
+    
+    @State private var wakeUp = defaultWakeTime
     @State private var sleepAmount = 8.0
     @State private var coffeeAmount = 1
     
     @State private var alertTitle = ""
     @State private var alertMessage = ""
     @State private var showingAlert = false
+    
+    static var defaultWakeTime: Date {
+        var components = DateComponents()
+        components.hour = 7
+        components.minute = 0
+        
+        return Calendar.current.date(from: components) ?? .now
+    }
     
     // MARK: 24 day - 1
 
@@ -31,17 +39,24 @@ struct ContentView: View {
         // MARK: 25 day
         
         NavigationStack {
-            VStack {
-                Text("When do you wont wake up?")
-                    .font(.headline)
-                DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
-                    .labelsHidden()
-                Text("Desired amount og sleep")
-                    .font(.headline)
-                Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
-                Text("Daily coffee intake")
-                Stepper("\(coffeeAmount)  cup(s)", value: $coffeeAmount, in: 1...20)
-                
+            Form {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("When do you wont wake up?")
+                        .font(.headline)
+                    DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
+//                        .labelsHidden()
+                }
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Desired amount og sleep")
+                        .font(.headline)
+                    Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
+                }
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Daily coffee intake")
+                    Stepper(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cup(s)", value: $coffeeAmount, in: 1...20)
+                    Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in: 1...20)
+                    Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in: 1...20)
+                }
             }
             .alert(alertTitle, isPresented: $showingAlert) {
                 Button("OK") {}
@@ -53,9 +68,7 @@ struct ContentView: View {
             .toolbar {
                 Button("Caiculate", action: calculateDedtime)
             }
-            
         }
-        
     }
     
     func calculateDedtime() {
@@ -71,7 +84,7 @@ struct ContentView: View {
             let sleepTime = wakeUp - prediction.actualSleep
             alertTitle = "Your ideal dedtime is..."
             alertMessage = sleepTime.formatted(date: .omitted, time: .shortened)
-            //print("Ivan tuta")
+            // print("Ivan tuta")
         } catch {
             alertTitle = "Error"
             alertMessage = "Sorry, there was a problem calculating your bedtime."
@@ -79,7 +92,6 @@ struct ContentView: View {
         showingAlert = true
     }
 }
-
 
 #Preview {
     ContentView()
