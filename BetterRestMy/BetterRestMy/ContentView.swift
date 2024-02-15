@@ -37,7 +37,6 @@ struct ContentView: View {
 
     var body: some View {
         // MARK: 25 day
-        
         NavigationStack {
             Form {
                 VStack(alignment: .leading, spacing: 0) {
@@ -56,6 +55,9 @@ struct ContentView: View {
                     Stepper(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cup(s)", value: $coffeeAmount, in: 1...20)
                     Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in: 1...20)
                 }
+                Image("Снимок экрана 2024-02-15 в 13.55.56")
+                    .resizable()
+                    .scaledToFit()
             }
             .alert(alertTitle, isPresented: $showingAlert) {
                 Button("OK") {}
