@@ -37,24 +37,34 @@ struct ContentView: View {
 
     var body: some View {
         // MARK: 25 day
+
         NavigationStack {
             Form {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("When do you wont wake up?")
-                        .font(.headline)
+                Section("When do you wont wake up?") {
                     DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
-//                        .labelsHidden()
                 }
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Desired amount og sleep")
-                        .font(.headline)
+//                VStack(alignment: .leading, spacing: 0) {
+//                    Text("When do you wont wake up?")
+//                        .font(.headline)
+//                    DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
+//                        .labelsHidden()
+//                }
+                Section("Desired amount og sleep") {
                     Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
                 }
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Daily coffee intake")
-                    Stepper(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cup(s)", value: $coffeeAmount, in: 1...20)
+//                VStack(alignment: .leading, spacing: 0) {
+//                    Text("Desired amount og sleep")
+//                        .font(.headline)
+//                    Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
+//                }
+                Section("Daily coffee intake") {
                     Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in: 1...20)
                 }
+//                VStack(alignment: .leading, spacing: 10) {
+//                    Text("Daily coffee intake")
+//                    Stepper(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cup(s)", value: $coffeeAmount, in: 1...20)
+//                    Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in: 1...20)
+//                }
                 Image("Снимок экрана 2024-02-15 в 13.55.56")
                     .resizable()
                     .scaledToFit()
